@@ -5,6 +5,7 @@ plugins {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
     group = 'ru.loper'
     version = '1.0.0-BETA'

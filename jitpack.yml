@@ -1,9 +1,9 @@
 jdk:
   - openjdk17
-  - openjdk21
 
 before_install:
   - java -version
+  - chmod +x gradlew
 
 install:
-  - mvn install -Dmaven.javadoc.skip=true -DskipTests
+  - ./gradlew build publishToMavenLocal --stacktrace
