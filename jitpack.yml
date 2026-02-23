@@ -6,4 +6,9 @@ before_install:
   - chmod +x gradlew
 
 install:
-  - ./gradlew build publishToMavenLocal --stacktrace
+  - ./gradlew build
+  - ./gradlew publishToMavenLocal
+
+artifacts:
+  - ~/.m2/repository/ru/loper/core/1.0.0-BETA/core-1.0.0-BETA.jar
+  - ~/.m2/repository/ru/loper/plugin/1.0.0-BETA/plugin-1.0.0-BETA.jar
