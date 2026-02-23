@@ -1,0 +1,42 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+}
+
+base {
+    archivesName = "SunCore-plugin"
+}
+
+repositories {
+    maven {
+        name = "tcoded-releases"
+        url = "https://repo.tcoded.com/releases"
+    }
+}
+
+dependencies {
+    implementation project(':core')
+
+    compileOnly "org.projectlombok:lombok:1.18.38"
+    annotationProcessor "org.projectlombok:lombok:1.18.38"
+
+    compileOnly('dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT')
+    compileOnly('io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT')
+    compileOnly('com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT')
+
+    compileOnly('com.github.MilkBowl:VaultAPI:1.7')
+    compileOnly('org.black_ixx:playerpoints:3.3.0')
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('')
+}
+
+tasks.build.dependsOn shadowJar

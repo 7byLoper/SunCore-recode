@@ -1,0 +1,20 @@
+no_permission: "&cУ вас нет прав"
+
+help: |
+  
+
+reload:
+  success: "&#05A3FE▶ &fКонфигурация успешно перезагрузилась за {ms} мс"
+
+save:
+  usage: "&#FF0000▶ &fИспользование: /suncore save [название]"
+  air: "&#FF0000▶ &fВы не можете сохранить воздух"
+  success: "&#05A3FE▶ &fПредмет &e{name} &fуспешно сохранён"
+
+give:
+  usage: "&#FF0000▶ &fИспользование: /suncore give [custom item] [player] [amount]"
+  item_not_found: "&#FF0000▶ &fДанного предмета не существует"
+  invalid_amount: "&#FF0000▶ &fНекорректное количество предметов"
+  player_only: "&cДанная команда доступна только игрокам"
+  player_not_found: "&#FF0000▶ &fУказанный игрок не найден или не в сети"
+  success: "&#05A3FE▶ &fВыдан предмет &e%s &fигроку &e%s &fв количестве &e%d"

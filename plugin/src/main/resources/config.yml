@@ -1,0 +1,22 @@
+# Default database
+database:
+  data_type: 'SQLITE'
+  host: ''
+  port: 3306
+  username: ''
+  password: ''
+  # Если тип базы данных SQLITE, то указывайте название файла
+  # Если тип базы данных MYSQL, то указывайте название таблицы
+  name: 'database'
+  # Если replace_all_databases true & SQLITE, то лучше использовать PERSISTENT для избежания ошибок
+  # PERSISTENT / PER_OPERATION
+  connect_type: PERSISTENT
+
+# Если параметр включен, то все плагины используют 1 DatabaseManager
+replace_all_databases: false
+
+#redis:
+#  host: '127.0.0.1'
+#  port: 6379
+#  timeout: 3000
+#  password: 'password'

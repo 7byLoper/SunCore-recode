@@ -1,0 +1,4 @@
+rootProject.name = 'SunCore'
+
+include 'core'
+include 'plugin'
