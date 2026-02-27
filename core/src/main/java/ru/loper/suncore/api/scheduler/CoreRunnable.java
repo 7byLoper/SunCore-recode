@@ -30,27 +30,27 @@ public abstract class CoreRunnable implements Runnable {
     }
 
     public CoreTask runTask(Plugin plugin) {
-        return setup(SchedulerServices.clientScheduler().runSync(plugin, this));
+        return setup(SchedulerServices.clientScheduler().runTask(plugin, this));
     }
 
     public CoreTask runTaskLater(Plugin plugin, long delayTicks) {
-        return setup(SchedulerServices.clientScheduler().runSyncLater(plugin, this, delayTicks));
+        return setup(SchedulerServices.clientScheduler().runTaskLater(plugin, this, delayTicks));
     }
 
     public CoreTask runTaskTimer(Plugin plugin, long delayTicks, long periodTicks) {
-        return setup(SchedulerServices.clientScheduler().runSyncTimer(plugin, this, delayTicks, periodTicks));
+        return setup(SchedulerServices.clientScheduler().runTaskTimer(plugin, this, delayTicks, periodTicks));
     }
 
     public CoreTask runTaskAsynchronously(Plugin plugin) {
-        return setup(SchedulerServices.clientScheduler().runAsync(plugin, this));
+        return setup(SchedulerServices.clientScheduler().runTaskAsynchronously(plugin, this));
     }
 
     public CoreTask runTaskLaterAsynchronously(Plugin plugin, long delayTicks) {
-        return setup(SchedulerServices.clientScheduler().runAsyncLater(plugin, this, delayTicks));
+        return setup(SchedulerServices.clientScheduler().runTaskLaterAsynchronously(plugin, this, delayTicks));
     }
 
     public CoreTask runTaskTimerAsynchronously(Plugin plugin, long delayTicks, long periodTicks) {
-        return setup(SchedulerServices.clientScheduler().runAsyncTimer(plugin, this, delayTicks, periodTicks));
+        return setup(SchedulerServices.clientScheduler().runTaskTimerAsynchronously(plugin, this, delayTicks, periodTicks));
     }
 
     private synchronized CoreTask setup(CoreTask scheduledTask) {

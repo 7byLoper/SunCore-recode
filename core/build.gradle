@@ -12,6 +12,7 @@ dependencies {
     compileOnly "com.mojang:authlib:1.5.21"
     compileOnly "me.clip:placeholderapi:2.11.6"
     implementation "io.lettuce:lettuce-core:7.4.0.RELEASE"
+    implementation 'io.papermc:paperlib:1.0.7'
 
     compileOnly files("${rootProject.projectDir}/libs/antirelog-3.0.11.jar")
 }

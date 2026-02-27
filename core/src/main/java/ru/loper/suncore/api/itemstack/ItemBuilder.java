@@ -92,19 +92,21 @@ public class ItemBuilder {
 
         if (section.contains("color")) {
             String colorStr = section.getString("color");
-            if (colorStr != null) {
+            if (colorStr != null && !colorStr.isEmpty()) {
                 try {
-                    String[] rgb = colorStr.split(",");
-                    if (rgb.length == 3) {
-                        int r = Integer.parseInt(rgb[0].trim());
-                        int g = Integer.parseInt(rgb[1].trim());
-                        int b = Integer.parseInt(rgb[2].trim());
-                        builder.color(Color.fromRGB(r, g, b));
+                    if (colorStr.startsWith("#")) {
+                        int hex = Integer.parseInt(colorStr.substring(1), 16);
+                        builder.color(Color.fromRGB(hex));
                     } else {
-                        Bukkit.getLogger().warning("Неверный формат цвета в конфиге: " + colorStr);
+                        String[] rgb = colorStr.split(",");
+                        if (rgb.length == 3) {
+                            int r = Integer.parseInt(rgb[0].trim());
+                            int g = Integer.parseInt(rgb[1].trim());
+                            int b = Integer.parseInt(rgb[2].trim());
+                            builder.color(Color.fromRGB(r, g, b));
+                        }
                     }
-                } catch (NumberFormatException e) {
-                    Bukkit.getLogger().warning("Ошибка при разборе цвета: " + colorStr);
+                } catch (NumberFormatException ignored) {
                 }
             }
         }

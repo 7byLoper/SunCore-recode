@@ -13,37 +13,37 @@ public class BukkitScheduler implements CoreScheduler {
     private final Set<CoreTask> tasks = ConcurrentHashMap.newKeySet();
 
     @Override
-    public CoreTask runSync(Plugin plugin, Runnable task) {
+    public CoreTask runTask(Plugin plugin, Runnable task) {
         BukkitTask bukkitTask = Bukkit.getScheduler().runTask(plugin, task);
         return track(new BukkitCoreTask(bukkitTask));
     }
 
     @Override
-    public CoreTask runSyncLater(Plugin plugin, Runnable task, long delayTicks) {
+    public CoreTask runTaskLater(Plugin plugin, Runnable task, long delayTicks) {
         BukkitTask bukkitTask = Bukkit.getScheduler().runTaskLater(plugin, task, delayTicks);
         return track(new BukkitCoreTask(bukkitTask));
     }
 
     @Override
-    public CoreTask runSyncTimer(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
+    public CoreTask runTaskTimer(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
         BukkitTask bukkitTask = Bukkit.getScheduler().runTaskTimer(plugin, task, delayTicks, periodTicks);
         return track(new BukkitCoreTask(bukkitTask));
     }
 
     @Override
-    public CoreTask runAsync(Plugin plugin, Runnable task) {
+    public CoreTask runTaskAsynchronously(Plugin plugin, Runnable task) {
         BukkitTask bukkitTask = Bukkit.getScheduler().runTaskAsynchronously(plugin, task);
         return track(new BukkitCoreTask(bukkitTask));
     }
 
     @Override
-    public CoreTask runAsyncLater(Plugin plugin, Runnable task, long delayTicks) {
+    public CoreTask runTaskLaterAsynchronously(Plugin plugin, Runnable task, long delayTicks) {
         BukkitTask bukkitTask = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, task, delayTicks);
         return track(new BukkitCoreTask(bukkitTask));
     }
 
     @Override
-    public CoreTask runAsyncTimer(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
+    public CoreTask runTaskTimerAsynchronously(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
         BukkitTask bukkitTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task, delayTicks, periodTicks);
         return track(new BukkitCoreTask(bukkitTask));
     }

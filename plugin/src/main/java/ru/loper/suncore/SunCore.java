@@ -23,6 +23,8 @@ import ru.loper.suncore.economy.PlayerPointsEconomy;
 import ru.loper.suncore.economy.VaultEconomy;
 import ru.loper.suncore.listeners.ItemsListener;
 import ru.loper.suncore.listeners.MenuListener;
+import ru.loper.suncore.listeners.PhysicsListener;
+import ru.loper.suncore.listeners.ServerMessagesListener;
 import ru.loper.suncore.registrar.BukkitCommandRegistrar;
 import ru.loper.suncore.scheduler.bukkit.BukkitScheduler;
 import ru.loper.suncore.scheduler.folia.FoliaScheduler;
@@ -55,7 +57,9 @@ public final class SunCore extends JavaPlugin {
 
         registerListeners(
                 new ItemsListener(),
-                new MenuListener()
+                new MenuListener(),
+                new ServerMessagesListener(configManager),
+                new PhysicsListener(configManager)
         );
 
         new CoreCommand(this)
@@ -70,7 +74,7 @@ public final class SunCore extends JavaPlugin {
         RedisManager.shutdownAll();
     }
 
-    private void printWelcome(){
+    private void printWelcome() {
         Bukkit.getConsoleSender().sendMessage("§e ____               ____");
         Bukkit.getConsoleSender().sendMessage("§e/ ___| _   _ _ __  / ___|___  _ __ ___");
         Bukkit.getConsoleSender().sendMessage("§e\\___ \\| | | | '_ \\| |   / _ \\| '__/ _ \\");

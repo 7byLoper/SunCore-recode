@@ -1,0 +1,17 @@
+advancement:
+  # Отключить или не отключать сообщение
+  enable: false
+  # Какое сообщение будет выводиться. Если пусто, то останется дефолтное
+  message: ''
+
+join:
+  enable: false
+  message: ''
+
+quit:
+  enable: false
+  message: ''
+
+death:
+  enable: false
+  message: ''

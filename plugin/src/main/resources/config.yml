@@ -15,6 +15,9 @@ database:
 # Если параметр включен, то все плагины используют 1 DatabaseManager
 replace_all_databases: false
 
+#Миры в которых отключена физика
+no_physics_worlds:
+  - "spawn"
 #redis:
 #  host: '127.0.0.1'
 #  port: 6379

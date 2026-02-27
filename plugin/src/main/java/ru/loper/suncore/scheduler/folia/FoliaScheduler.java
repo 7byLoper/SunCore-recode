@@ -14,20 +14,20 @@ public final class FoliaScheduler implements CoreScheduler {
     private final Set<CoreTask> tasks = ConcurrentHashMap.newKeySet();
 
     @Override
-    public CoreTask runSync(Plugin plugin, Runnable task) {
+    public CoreTask runTask(Plugin plugin, Runnable task) {
         ScheduledTask scheduledTask = Bukkit.getGlobalRegionScheduler().run(plugin, st -> task.run());
         return track(new FoliaCoreTask(scheduledTask));
     }
 
     @Override
-    public CoreTask runSyncLater(Plugin plugin, Runnable task, long delayTicks) {
+    public CoreTask runTaskLater(Plugin plugin, Runnable task, long delayTicks) {
         long delay = Math.max(1L, delayTicks);
         ScheduledTask scheduledTask = Bukkit.getGlobalRegionScheduler().runDelayed(plugin, st -> task.run(), delay);
         return track(new FoliaCoreTask(scheduledTask));
     }
 
     @Override
-    public CoreTask runSyncTimer(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
+    public CoreTask runTaskTimer(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
         long delay = Math.max(1L, delayTicks);
         long period = Math.max(1L, periodTicks);
         ScheduledTask scheduledTask = Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, st -> task.run(), delay, period);
@@ -35,20 +35,20 @@ public final class FoliaScheduler implements CoreScheduler {
     }
 
     @Override
-    public CoreTask runAsync(Plugin plugin, Runnable task) {
+    public CoreTask runTaskAsynchronously(Plugin plugin, Runnable task) {
         ScheduledTask scheduledTask = Bukkit.getAsyncScheduler().runNow(plugin, st -> task.run());
         return track(new FoliaCoreTask(scheduledTask));
     }
 
     @Override
-    public CoreTask runAsyncLater(Plugin plugin, Runnable task, long delayTicks) {
+    public CoreTask runTaskLaterAsynchronously(Plugin plugin, Runnable task, long delayTicks) {
         long delayMs = Math.max(1L, delayTicks * 50L);
         ScheduledTask scheduledTask = Bukkit.getAsyncScheduler().runDelayed(plugin, st -> task.run(), delayMs, TimeUnit.MILLISECONDS);
         return track(new FoliaCoreTask(scheduledTask));
     }
 
     @Override
-    public CoreTask runAsyncTimer(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
+    public CoreTask runTaskTimerAsynchronously(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
         long delayMs = delayTicks * 50L;
         long periodMs = Math.max(1L, periodTicks * 50L);
         ScheduledTask scheduledTask = Bukkit.getAsyncScheduler().runAtFixedRate(plugin, st -> task.run(), delayMs, periodMs, TimeUnit.MILLISECONDS);

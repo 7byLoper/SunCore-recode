@@ -14,7 +14,7 @@ public abstract class AsyncMenu extends AbstractMenu {
 
         async(() -> {
             this.populateInventory();
-            SchedulerServices.clientScheduler().runSyncLater(CoreService.coreInstance(), () -> player.openInventory(menuInventory), 1L);
+            SchedulerServices.clientScheduler().runTaskLater(CoreService.coreInstance(), () -> player.openInventory(menuInventory), 1L);
         });
     }
 
@@ -32,6 +32,6 @@ public abstract class AsyncMenu extends AbstractMenu {
     }
 
     private void sync(Runnable runnable) {
-        SchedulerServices.clientScheduler().runSync(CoreService.coreInstance(), runnable);
+        SchedulerServices.clientScheduler().runTask(CoreService.coreInstance(), runnable);
     }
 }
