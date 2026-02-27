@@ -33,6 +33,18 @@ public abstract class BaseCommandExecutor extends SmartCommandExecutor {
         this.permission = register.permission();
     }
 
+    public BaseCommandExecutor(Plugin plugin, String name, String permission) {
+        this.name = name;
+        this.permission = permission;
+
+        CommandServices.registrar().registerCommand(name, this, plugin);
+    }
+
+    public BaseCommandExecutor(String name, String permission) {
+        this.name = name;
+        this.permission = permission;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (permission != null && !sender.hasPermission(permission)) {

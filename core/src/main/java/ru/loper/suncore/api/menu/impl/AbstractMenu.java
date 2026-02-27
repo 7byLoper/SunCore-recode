@@ -178,8 +178,12 @@ public abstract class AbstractMenu implements InventoryHolder, IMenu {
         return true;
     }
 
-    protected AbstractMenu getInstance() {
+    public AbstractMenu getInstance() {
         return this;
     }
 
+    @Override
+    public @NotNull Inventory getInventory() {
+        return menuInventory;
+    }
 }
