@@ -11,7 +11,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ru.loper.suncore.api.CoreService;
 import ru.loper.suncore.api.command.CommandServices;
 import ru.loper.suncore.api.database.DatabaseServices;
+import ru.loper.suncore.api.economy.EconomyEditor;
 import ru.loper.suncore.api.economy.EconomyServices;
+import ru.loper.suncore.api.hook.holograms.HologramHook;
+import ru.loper.suncore.api.hook.holograms.HologramsServices;
 import ru.loper.suncore.api.itemstack.ItemStackServices;
 import ru.loper.suncore.api.redis.RedisManager;
 import ru.loper.suncore.api.scheduler.CoreScheduler;
@@ -19,8 +22,9 @@ import ru.loper.suncore.api.scheduler.SchedulerServices;
 import ru.loper.suncore.api.utilities.VersionHelper;
 import ru.loper.suncore.commands.core.CoreCommand;
 import ru.loper.suncore.config.CoreConfigManager;
-import ru.loper.suncore.economy.PlayerPointsEconomy;
 import ru.loper.suncore.economy.VaultEconomy;
+import ru.loper.suncore.hologram.DecentHologramsHook;
+import ru.loper.suncore.hologram.FancyHologramsHook;
 import ru.loper.suncore.listeners.ItemsListener;
 import ru.loper.suncore.listeners.MenuListener;
 import ru.loper.suncore.listeners.PhysicsListener;
@@ -52,8 +56,25 @@ public final class SunCore extends JavaPlugin {
         DatabaseServices.setReplaceAllDatabases(configManager.isReplaceAllDatabases());
         DatabaseServices.setDefaultDatabase(configManager.getDefaultDatabase());
 
-        EconomyServices.setVaultEconomy(new VaultEconomy());
-        EconomyServices.setPlayerPointsEconomy(new PlayerPointsEconomy());
+        EconomyEditor vaultEconomy = new VaultEconomy();
+        vaultEconomy.setup();
+        EconomyServices.setVaultEconomy(vaultEconomy);
+
+        EconomyEditor playerPointsEconomy = new VaultEconomy();
+        playerPointsEconomy.setup();
+        EconomyServices.setPlayerPointsEconomy(playerPointsEconomy);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("DecentHolograms")) {
+            HologramHook decentHolograms = new DecentHologramsHook();
+            decentHolograms.setup();
+            HologramsServices.setDecentHolograms(decentHolograms);
+        }
+
+        if (Bukkit.getPluginManager().isPluginEnabled("FancyHolograms")) {
+            HologramHook fancyHolograms = new FancyHologramsHook();
+            fancyHolograms.setup();
+            HologramsServices.setDecentHolograms(fancyHolograms);
+        }
 
         registerListeners(
                 new ItemsListener(),

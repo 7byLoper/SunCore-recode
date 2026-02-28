@@ -12,3 +12,5 @@ website: t.me/bySunDev
 softdepend:
   - Vault
   - PlayerPoints
+  - DecentHolograms
+  - FancyHolograms

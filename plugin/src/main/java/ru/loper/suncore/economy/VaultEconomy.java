@@ -12,11 +12,13 @@ public class VaultEconomy implements EconomyEditor {
     @Override
     public void setup() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+            Bukkit.getLogger().warning("Vault economy detect failed!");
             return;
         }
 
         RegisteredServiceProvider<Economy> provider = Bukkit.getServicesManager().getRegistration(Economy.class);
         if (provider == null) {
+            Bukkit.getLogger().warning("Vault economy detect failed!");
             return;
         }
 

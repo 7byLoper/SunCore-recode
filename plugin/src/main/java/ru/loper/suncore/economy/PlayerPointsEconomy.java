@@ -12,6 +12,7 @@ public class PlayerPointsEconomy implements EconomyEditor {
     @Override
     public void setup() {
         if (Bukkit.getPluginManager().getPlugin("PlayerPoints") == null) {
+            Bukkit.getLogger().warning("PlayerPoints economy detect failed!");
             return;
         }
 
