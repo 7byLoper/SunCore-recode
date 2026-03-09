@@ -14,7 +14,5 @@ dependencies {
     implementation "io.lettuce:lettuce-core:7.4.0.RELEASE"
     implementation 'io.papermc:paperlib:1.0.7'
 
-    compileOnly(fileTree("${rootProject.projectDir}/libs") {
-        include("*.jar")
-    })
+    compileOnly "com.github.7byLoper:AntiRelog:1.0.0-RELEASE"
 }
