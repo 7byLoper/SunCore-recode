@@ -59,6 +59,7 @@ public abstract class BaseCommandExecutor extends SmartCommandExecutor {
 
         BuildableCommandWrapper subCommand = getCommandByLabel(args[0]);
         if (subCommand == null) {
+            handleNoSubCommand(sender, args);
             return true;
         }
 
@@ -100,5 +101,11 @@ public abstract class BaseCommandExecutor extends SmartCommandExecutor {
 
     public abstract void registerWrappers();
 
-    public abstract void handleNoArguments(@NotNull CommandSender sender);
+    public void handleNoArguments(@NotNull CommandSender sender) {
+        //no handled
+    }
+
+    public void handleNoSubCommand(@NotNull CommandSender sender, @NotNull String[] args) {
+        //no handled
+    }
 }

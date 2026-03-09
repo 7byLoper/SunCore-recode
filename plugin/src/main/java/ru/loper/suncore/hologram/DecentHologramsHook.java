@@ -9,16 +9,25 @@ import ru.loper.suncore.api.hook.holograms.HologramHook;
 import java.util.List;
 
 public class DecentHologramsHook implements HologramHook {
+    private boolean setup;
+
     @Override
     public void setup() {
         if (Bukkit.getPluginManager().getPlugin("DecentHolograms") == null) {
             Bukkit.getLogger().warning("DecentHolograms detect failed!");
+            setup = false;
             return;
         }
+
+        setup = true;
     }
 
     @Override
     public void createHologram(String name, Location location, List<String> lines) {
+        if (!setup) {
+            return;
+        }
+
         Hologram hologram = DHAPI.getHologram(name);
         if (hologram == null) {
             DHAPI.createHologram(name, location, lines);
@@ -30,6 +39,10 @@ public class DecentHologramsHook implements HologramHook {
 
     @Override
     public void updateHologram(String name, Location location, List<String> lines) {
+        if (!setup) {
+            return;
+        }
+
         Hologram hologram = DHAPI.getHologram(name);
         if (hologram == null) {
             return;
@@ -46,6 +59,10 @@ public class DecentHologramsHook implements HologramHook {
 
     @Override
     public void removeHologram(String name) {
+        if (!setup) {
+            return;
+        }
+
         Hologram hologram = DHAPI.getHologram(name);
         if (hologram == null) {
             return;

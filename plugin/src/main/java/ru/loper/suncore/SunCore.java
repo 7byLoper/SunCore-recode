@@ -64,17 +64,13 @@ public final class SunCore extends JavaPlugin {
         playerPointsEconomy.setup();
         EconomyServices.setPlayerPointsEconomy(playerPointsEconomy);
 
-        if (Bukkit.getPluginManager().isPluginEnabled("DecentHolograms")) {
-            HologramHook decentHolograms = new DecentHologramsHook();
-            decentHolograms.setup();
-            HologramsServices.setDecentHolograms(decentHolograms);
-        }
+        HologramHook decentHolograms = new DecentHologramsHook();
+        decentHolograms.setup();
+        HologramsServices.setDecentHolograms(decentHolograms);
 
-        if (Bukkit.getPluginManager().isPluginEnabled("FancyHolograms")) {
-            HologramHook fancyHolograms = new FancyHologramsHook();
-            fancyHolograms.setup();
-            HologramsServices.setDecentHolograms(fancyHolograms);
-        }
+        HologramHook fancyHolograms = new FancyHologramsHook();
+        fancyHolograms.setup();
+        HologramsServices.setFancyHolograms(fancyHolograms);
 
         registerListeners(
                 new ItemsListener(),

@@ -8,7 +8,7 @@ database:
   # Если тип базы данных SQLITE, то указывайте название файла
   # Если тип базы данных MYSQL, то указывайте название таблицы
   name: 'database'
-  # Если replace_all_databases true & SQLITE, то лучше использовать PERSISTENT для избежания ошибок
+  # Если replace_all_databases true || SQLITE, то лучше использовать PERSISTENT для избежания ошибок
   # PERSISTENT / PER_OPERATION
   connect_type: PERSISTENT
 
