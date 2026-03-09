@@ -2,7 +2,7 @@ package ru.loper.suncore.api.hook.antirelog;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import ru.leymooo.antirelog.Antirelog;
 import ru.leymooo.antirelog.config.Settings;
 import ru.leymooo.antirelog.manager.BossbarManager;
@@ -20,13 +20,13 @@ public class AntiRelogHook {
     private PvPManager manager;
     private Settings settings;
 
-    public void hook(Plugin plugin) {
+    public void hook(JavaPlugin plugin) {
         if (plugin.getServer().getPluginManager().getPlugin("AntiRelog") == null) {
             plugin.getLogger().warning("AntiRelog не установлен, некоторые функции могут не работать!");
             return;
         }
 
-        antirelog = Antirelog.getPlugin(Antirelog.class);
+        antirelog = plugin.getPlugin(Antirelog.class);
         manager = antirelog.getPvpManager();
         settings = antirelog.getSettings();
 

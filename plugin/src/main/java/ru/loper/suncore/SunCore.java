@@ -13,6 +13,7 @@ import ru.loper.suncore.api.command.CommandServices;
 import ru.loper.suncore.api.database.DatabaseServices;
 import ru.loper.suncore.api.economy.EconomyEditor;
 import ru.loper.suncore.api.economy.EconomyServices;
+import ru.loper.suncore.api.hook.antirelog.AntiRelogHook;
 import ru.loper.suncore.api.hook.holograms.HologramHook;
 import ru.loper.suncore.api.hook.holograms.HologramsServices;
 import ru.loper.suncore.api.itemstack.ItemStackServices;
@@ -81,6 +82,8 @@ public final class SunCore extends JavaPlugin {
 
         new CoreCommand(this)
                 .registerWrappers();
+
+        SchedulerServices.clientScheduler().runTaskLater(this, () -> AntiRelogHook.hook(this), 20L);
     }
 
     @Override
