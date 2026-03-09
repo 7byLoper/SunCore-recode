@@ -3,7 +3,7 @@ package ru.loper.suncore.api.hook.antirelog;
 import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.leymooo.antirelog.Antirelog;
+import ru.leymooo.antirelog.AntiRelog;
 import ru.leymooo.antirelog.config.Settings;
 import ru.leymooo.antirelog.manager.BossbarManager;
 import ru.leymooo.antirelog.manager.PowerUpsManager;
@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 public class AntiRelogHook {
     private boolean hook = false;
 
-    private Antirelog antirelog;
+    private AntiRelog antirelog;
     private PvPManager manager;
     private Settings settings;
 
@@ -26,7 +26,7 @@ public class AntiRelogHook {
             return;
         }
 
-        antirelog = plugin.getPlugin(Antirelog.class);
+        antirelog = plugin.getPlugin(AntiRelog.class);
         manager = antirelog.getPvpManager();
         settings = antirelog.getSettings();
 
@@ -254,7 +254,7 @@ public class AntiRelogHook {
         return hook;
     }
 
-    public Antirelog getAntiRelogInstance() {
+    public AntiRelog getAntiRelogInstance() {
         return antirelog;
     }
 }
