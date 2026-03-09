@@ -30,7 +30,7 @@ dependencies {
     compileOnly('org.black_ixx:playerpoints:3.3.0')
 
     compileOnly("de.oliver:FancyHolograms:2.9.1")
-    compileOnly 'com.github.decentsoftware-eu:decentholograms:2.7.11'
+    compileOnly('com.github.decentsoftware-eu:decentholograms:2.7.11')
 }
 
 processResources {
