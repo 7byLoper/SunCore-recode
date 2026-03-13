@@ -51,18 +51,20 @@ shadowJar {
     exclude 'module-info.class'
 }
 
-tasks.named('jar') {
-    enabled = false
-}
-
 tasks.build {
     dependsOn tasks.shadowJar
+}
+
+tasks.named('jar') {
+    enabled = false
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact shadowJar
+            groupId = project.group
+            version = project.version
         }
     }
 }

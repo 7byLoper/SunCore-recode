@@ -16,3 +16,11 @@ dependencies {
 
     compileOnly "com.github.7byLoper:AntiRelog:1.0.0-RELEASE"
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

@@ -31,12 +31,4 @@ subprojects {
     tasks.named('jar') {
         archiveVersion.set(project.version)
     }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
 }
