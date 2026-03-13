@@ -58,3 +58,11 @@ tasks.named('jar') {
 tasks.build {
     dependsOn tasks.shadowJar
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact shadowJar
+        }
+    }
+}
