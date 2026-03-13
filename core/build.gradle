@@ -1,3 +1,7 @@
+plugins {
+    id 'com.gradleup.shadow' version '9.0.0-beta4'
+}
+
 base {
     archivesName = "SunCore-core"
 }
@@ -17,10 +21,30 @@ dependencies {
     compileOnly "com.github.7byLoper:AntiRelog:1.0.0-RELEASE"
 }
 
+shadowJar {
+    archiveClassifier.set('')
+
+    relocate("io.lettuce", "ru.loper.suncore.shade.lettuce")
+    relocate("io.netty", "ru.loper.suncore.shade.netty")
+
+    exclude 'META-INF/versions/**'
+    exclude 'module-info.class'
+}
+
+tasks.build {
+    dependsOn tasks.shadowJar
+}
+
+tasks.named('jar') {
+    enabled = false
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from components.java
+            artifact shadowJar
+            groupId = project.group
+            version = project.version
         }
     }
 }

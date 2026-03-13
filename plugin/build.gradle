@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(path: ':core', configuration: 'shadow')
 
     compileOnly "org.projectlombok:lombok:1.18.38"
     annotationProcessor "org.projectlombok:lombok:1.18.38"
@@ -43,9 +43,6 @@ processResources {
 
 shadowJar {
     archiveClassifier.set('')
-
-    relocate("io.lettuce", "ru.loper.suncore.shade.lettuce")
-    relocate("io.netty", "ru.loper.suncore.shade.netty")
 
     exclude 'META-INF/versions/**'
     exclude 'module-info.class'
