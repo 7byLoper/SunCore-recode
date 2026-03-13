@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '9.0.0-beta4'
 }
 
 base {
@@ -43,8 +43,18 @@ processResources {
 
 shadowJar {
     archiveClassifier.set('')
+
     relocate("io.lettuce", "ru.loper.suncore.shade.lettuce")
     relocate("io.netty", "ru.loper.suncore.shade.netty")
+
+    exclude 'META-INF/versions/**'
+    exclude 'module-info.class'
 }
 
-tasks.build.dependsOn shadowJar
+tasks.named('jar') {
+    enabled = false
+}
+
+tasks.build {
+    dependsOn tasks.shadowJar
+}
