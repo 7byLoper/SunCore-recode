@@ -8,4 +8,6 @@ public @interface CommandRegister {
     String name();
 
     String permission();
+
+    String[] aliases() default {};
 }

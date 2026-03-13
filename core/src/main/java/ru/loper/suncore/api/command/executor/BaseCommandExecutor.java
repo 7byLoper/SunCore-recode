@@ -17,10 +17,11 @@ import java.util.List;
 public abstract class BaseCommandExecutor extends SmartCommandExecutor {
     private final String name;
     private final String permission;
+    private final List<String> aliases;
 
     public BaseCommandExecutor(Plugin plugin) {
         this();
-        CommandServices.registrar().registerCommand(name, this, plugin);
+        CommandServices.registrar().registerCommand(name, aliases, this, plugin);
     }
 
     public BaseCommandExecutor() {
@@ -31,18 +32,29 @@ public abstract class BaseCommandExecutor extends SmartCommandExecutor {
 
         this.name = register.name();
         this.permission = register.permission();
+        this.aliases = List.of(register.aliases());
     }
 
     public BaseCommandExecutor(Plugin plugin, String name, String permission) {
         this.name = name;
         this.permission = permission;
+        this.aliases = List.of();
 
         CommandServices.registrar().registerCommand(name, this, plugin);
     }
 
-    public BaseCommandExecutor(String name, String permission) {
+    public BaseCommandExecutor(Plugin plugin, String name, String permission, List<String> aliases) {
         this.name = name;
         this.permission = permission;
+        this.aliases = aliases;
+
+        CommandServices.registrar().registerCommand(name, aliases, this, plugin);
+    }
+
+    public BaseCommandExecutor(String name, String permission, List<String> aliases) {
+        this.name = name;
+        this.permission = permission;
+        this.aliases = aliases;
     }
 
     @Override

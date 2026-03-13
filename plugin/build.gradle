@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 base {
@@ -43,6 +43,8 @@ processResources {
 
 shadowJar {
     archiveClassifier.set('')
+    relocate("io.lettuce", "ru.loper.suncore.shade.lettuce")
+    relocate("io.netty", "ru.loper.suncore.shade.netty")
 }
 
 tasks.build.dependsOn shadowJar

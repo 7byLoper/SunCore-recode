@@ -11,7 +11,7 @@ public interface BuildableCommand {
 
     List<String> tabComplete(@NotNull CommandSender commandSender, @NotNull String[] args);
 
-    default boolean hasTabComplete(CommandSender commandSender) {
+    default boolean hasTabComplete(@NotNull CommandSender commandSender) {
         return true;
     }
 }
