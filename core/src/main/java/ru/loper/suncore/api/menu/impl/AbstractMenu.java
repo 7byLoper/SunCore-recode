@@ -2,6 +2,7 @@ package ru.loper.suncore.api.menu.impl;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,6 +28,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public abstract class AbstractMenu implements InventoryHolder, IMenu {
     protected final List<Button> menuButtons = new ArrayList<>();
@@ -171,7 +173,7 @@ public abstract class AbstractMenu implements InventoryHolder, IMenu {
                 .filter(viewer -> viewer instanceof Player)
                 .map(viewer -> (Player) viewer)
                 .toList();
-        return viewers.isEmpty() ? null : viewers.get(0);
+        return viewers.isEmpty() ? null : viewers.getFirst();
     }
 
     protected boolean cancelDropClick() {
