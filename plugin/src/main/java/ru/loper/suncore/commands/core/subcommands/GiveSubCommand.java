@@ -52,11 +52,12 @@ public class GiveSubCommand implements BuildableCommand {
 
     private Player resolveTargetPlayer(CommandSender sender, String[] args) {
         if (args.length < 3) {
-            if (!(sender instanceof Player)) {
+            if (!(sender instanceof Player player)) {
                 sender.sendMessage(configManager.getMessageConfig().getGivePlayerOnly());
                 return null;
             }
-            return (Player) sender;
+
+            return player;
         }
 
         Player player = Bukkit.getPlayer(args[2]);
@@ -64,6 +65,7 @@ public class GiveSubCommand implements BuildableCommand {
             sender.sendMessage(configManager.getMessageConfig().getGivePlayerNotFound());
             return null;
         }
+
         return player;
     }
 
