@@ -23,6 +23,7 @@ import ru.loper.suncore.api.scheduler.SchedulerServices;
 import ru.loper.suncore.api.utilities.VersionHelper;
 import ru.loper.suncore.commands.core.CoreCommand;
 import ru.loper.suncore.config.CoreConfigManager;
+import ru.loper.suncore.economy.PlayerPointsEconomy;
 import ru.loper.suncore.economy.VaultEconomy;
 import ru.loper.suncore.hologram.DecentHologramsHook;
 import ru.loper.suncore.hologram.FancyHologramsHook;
@@ -31,6 +32,7 @@ import ru.loper.suncore.listeners.MenuListener;
 import ru.loper.suncore.listeners.PhysicsListener;
 import ru.loper.suncore.listeners.ServerMessagesListener;
 import ru.loper.suncore.registrar.BukkitCommandRegistrar;
+import ru.loper.suncore.runnable.MenuRefreshRunnable;
 import ru.loper.suncore.scheduler.bukkit.BukkitScheduler;
 import ru.loper.suncore.scheduler.folia.FoliaScheduler;
 
@@ -61,7 +63,7 @@ public final class SunCore extends JavaPlugin {
         vaultEconomy.setup();
         EconomyServices.setVaultEconomy(vaultEconomy);
 
-        EconomyEditor playerPointsEconomy = new VaultEconomy();
+        EconomyEditor playerPointsEconomy = new PlayerPointsEconomy();
         playerPointsEconomy.setup();
         EconomyServices.setPlayerPointsEconomy(playerPointsEconomy);
 
@@ -86,6 +88,9 @@ public final class SunCore extends JavaPlugin {
 
         new CoreCommand(this)
                 .registerWrappers();
+
+        new MenuRefreshRunnable()
+                .runTaskTimer(this, 20L, 20L);
 
         SchedulerServices.clientScheduler().runTaskLater(this, () -> AntiRelogHook.hook(this), 20L);
     }

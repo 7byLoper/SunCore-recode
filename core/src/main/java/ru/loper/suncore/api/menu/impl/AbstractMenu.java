@@ -3,7 +3,6 @@ package ru.loper.suncore.api.menu.impl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,8 +17,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.loper.suncore.api.CoreService;
-import ru.loper.suncore.api.colorize.ComponentColorize;
+import ru.loper.suncore.api.colorize.StringColorize;
 import ru.loper.suncore.api.itemstack.ItemBuilder;
 import ru.loper.suncore.api.menu.IMenu;
 import ru.loper.suncore.api.menu.button.Button;
@@ -49,11 +47,13 @@ public abstract class AbstractMenu implements InventoryHolder, IMenu {
         menuInventory = createInventory();
 
         populateInventory();
-        Bukkit.getScheduler().runTaskLater(CoreService.coreInstance(), () -> player.openInventory(menuInventory), 1L);
+        player.openInventory(menuInventory);
+        //Bukkit.getScheduler().runTaskLater(CoreService.coreInstance(), () -> player.openInventory(menuInventory), 1L);
     }
 
     protected Inventory createInventory() {
-        Component title = ComponentColorize.fromLegacyString(getTitle());
+        //Component title = ComponentColorize.fromLegacyString(getTitle());
+        String title = getTitle() != null ? StringColorize.parse(getTitle()) : "";
         return Bukkit.createInventory(this, getSize(), title);
     }
 
@@ -112,6 +112,10 @@ public abstract class AbstractMenu implements InventoryHolder, IMenu {
     @Override
     public void onDrag(@NotNull InventoryDragEvent event) {
         event.setCancelled(true);
+    }
+
+    public void refreshMenu() {
+        // Вызывается каждую секунду
     }
 
     public void removeButton(int slot) {
@@ -173,7 +177,7 @@ public abstract class AbstractMenu implements InventoryHolder, IMenu {
                 .filter(viewer -> viewer instanceof Player)
                 .map(viewer -> (Player) viewer)
                 .toList();
-        return viewers.isEmpty() ? null : viewers.getFirst();
+        return viewers.isEmpty() ? null : viewers.get(0);
     }
 
     protected boolean cancelDropClick() {

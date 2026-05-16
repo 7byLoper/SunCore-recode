@@ -42,7 +42,8 @@ public class GiveSubCommand implements BuildableCommand {
             return;
         }
 
-        player.getInventory().addItem(itemBuilder.amount(amount).build());
+        player.getInventory().addItem(itemBuilder.amount(amount).build())
+                .values().forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
         sender.sendMessage(String.format(
                 configManager.getMessageConfig().getGiveSuccess(),
                 args[1], player.getName(), amount

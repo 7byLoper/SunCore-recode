@@ -1,16 +1,15 @@
 package ru.loper.suncore.commands.core;
 
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import ru.loper.suncore.SunCore;
 import ru.loper.suncore.api.command.executor.BaseCommandExecutor;
 import ru.loper.suncore.api.command.register.CommandRegister;
+import ru.loper.suncore.commands.core.subcommands.GiveAllFromFileSubCommand;
 import ru.loper.suncore.commands.core.subcommands.GiveSubCommand;
 import ru.loper.suncore.commands.core.subcommands.ReloadSubCommand;
 import ru.loper.suncore.commands.core.subcommands.SaveSubCommand;
 import ru.loper.suncore.config.CoreConfigManager;
 
-@CommandRegister(name = "suncore", permission = "suncore.command.use")
+@CommandRegister(name = "suncore", permission = "suncore.command.use", aliases = "score")
 public class CoreCommand extends BaseCommandExecutor {
     private final CoreConfigManager configManager;
 
@@ -29,9 +28,6 @@ public class CoreCommand extends BaseCommandExecutor {
         addSubCommand(new ReloadSubCommand(configManager));
         addSubCommand(new SaveSubCommand(configManager));
         addSubCommand(new GiveSubCommand(configManager));
-    }
-
-    @Override
-    public void handleNoArguments(@NotNull CommandSender sender) {
+        addSubCommand(new GiveAllFromFileSubCommand(configManager, SunCore.getPlugin(SunCore.class)));
     }
 }

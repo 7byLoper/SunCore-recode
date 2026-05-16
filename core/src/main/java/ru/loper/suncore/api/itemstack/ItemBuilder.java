@@ -126,6 +126,10 @@ public class ItemBuilder {
             builder.potionEffects(effects);
         }
 
+        if (section.contains("amount")) {
+            builder.amount(section.getInt("amount", 1));
+        }
+
         return builder;
     }
 
