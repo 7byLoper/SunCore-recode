@@ -1,0 +1,44 @@
+plugins {
+    id 'com.gradleup.shadow' version '9.0.0-beta4'
+}
+
+base {
+    archivesName = "SunCore-component-api"
+}
+
+dependencies {
+    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+
+    compileOnly "org.projectlombok:lombok:1.18.38"
+    annotationProcessor "org.projectlombok:lombok:1.18.38"
+
+    implementation("net.kyori:adventure-text-minimessage:4.23.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.0")
+}
+
+shadowJar {
+    archiveClassifier.set('')
+
+    relocate("net.kyori", "ru.loper.suncore.shade.kyori")
+
+    exclude 'META-INF/versions/**'
+    exclude 'module-info.class'
+}
+
+tasks.build {
+    dependsOn tasks.shadowJar
+}
+
+tasks.named('jar') {
+    enabled = false
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact shadowJar
+            groupId = project.group
+            version = project.version
+        }
+    }
+}

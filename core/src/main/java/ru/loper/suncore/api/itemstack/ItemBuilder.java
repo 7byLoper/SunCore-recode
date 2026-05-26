@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import net.kyori.adventure.text.Component;
 import ru.loper.suncore.api.colorize.StringColorize;
 
 import java.util.*;
@@ -502,6 +503,33 @@ public class ItemBuilder {
     }
 
     /**
+     * Получает отображаемое имя предмета в формате Adventure Component.
+     *
+     * @return Component отображаемого имени или пустой Component, если имя не установлено
+     */
+    public Component componentName() {
+        ItemMeta meta = meta();
+        if (meta == null || !meta.hasDisplayName() || meta.displayName() == null) {
+            return Component.empty();
+        }
+
+        return meta.displayName();
+    }
+
+    /**
+     * Устанавливает отображаемое имя предмета из Adventure Component.
+     *
+     * @param name Component отображаемого имени
+     * @return Этот экземпляр ItemBuilder
+     */
+    public ItemBuilder name(Component name) {
+        ItemMeta meta = meta();
+        if (meta == null || name == null) return this;
+        meta.displayName(name);
+        return meta(meta);
+    }
+
+    /**
      * Получает описание (lore) предмета.
      *
      * @return Список строк описания или пустой список, если не установлено
@@ -509,6 +537,20 @@ public class ItemBuilder {
     public List<String> lore() {
         ItemMeta meta = meta();
         return meta != null && meta.getLore() != null ? meta.getLore() : new ArrayList<>();
+    }
+
+    /**
+     * Получает описание предмета в формате Adventure Component.
+     *
+     * @return Список компонентов описания или пустой список, если описание не установлено
+     */
+    public List<Component> componentLore() {
+        ItemMeta meta = meta();
+        if (meta == null || meta.lore() == null) {
+            return new ArrayList<>();
+        }
+
+        return new ArrayList<>(meta.lore());
     }
 
     /**
@@ -524,6 +566,36 @@ public class ItemBuilder {
         }
 
         meta.setLore(StringColorize.parse(lore));
+        return meta(meta);
+    }
+
+    /**
+     * Устанавливает описание предмета из Adventure Component.
+     *
+     * @param lore Компоненты описания для установки
+     * @return Этот экземпляр ItemBuilder
+     */
+    public ItemBuilder lore(Component... lore) {
+        if (lore == null) {
+            return this;
+        }
+
+        return componentLore(Arrays.asList(lore));
+    }
+
+    /**
+     * Устанавливает описание предмета из списка Adventure Component.
+     *
+     * @param lore Компоненты описания для установки
+     * @return Этот экземпляр ItemBuilder
+     */
+    public ItemBuilder componentLore(List<Component> lore) {
+        ItemMeta meta = meta();
+        if (meta == null || lore == null) {
+            return this;
+        }
+
+        meta.lore(lore.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         return meta(meta);
     }
 
@@ -574,6 +646,39 @@ public class ItemBuilder {
     }
 
     /**
+     * Добавляет компоненты описания к существующему описанию.
+     *
+     * @param lore Компоненты описания для добавления
+     * @return Этот экземпляр ItemBuilder
+     */
+    public ItemBuilder addLore(Component... lore) {
+        if (lore == null) {
+            return this;
+        }
+
+        return addComponentLore(Arrays.asList(lore));
+    }
+
+    /**
+     * Добавляет список Adventure Component к существующему описанию.
+     *
+     * @param lore Компоненты описания для добавления
+     * @return Этот экземпляр ItemBuilder
+     */
+    public ItemBuilder addComponentLore(List<Component> lore) {
+        ItemMeta meta = meta();
+        if (meta == null || lore == null) {
+            return this;
+        }
+
+        List<Component> currentLore = componentLore();
+        currentLore.addAll(lore.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+        meta.lore(currentLore);
+
+        return meta(meta);
+    }
+
+    /**
      * Добавляет строки описания перед существующим описанием.
      *
      * @param lore Строки описания для добавления в начало
@@ -593,6 +698,39 @@ public class ItemBuilder {
         List<String> toAdd = StringColorize.parse(Arrays.asList(lore));
         currentLore.addAll(0, toAdd);
         meta.setLore(currentLore);
+
+        return meta(meta);
+    }
+
+    /**
+     * Добавляет компоненты описания перед существующим описанием.
+     *
+     * @param lore Компоненты описания для добавления в начало
+     * @return Этот экземпляр ItemBuilder
+     */
+    public ItemBuilder addLoreAbove(Component... lore) {
+        if (lore == null) {
+            return this;
+        }
+
+        return addComponentLoreAbove(Arrays.asList(lore));
+    }
+
+    /**
+     * Добавляет список Adventure Component перед существующим описанием.
+     *
+     * @param lore Компоненты описания для добавления в начало
+     * @return Этот экземпляр ItemBuilder
+     */
+    public ItemBuilder addComponentLoreAbove(List<Component> lore) {
+        ItemMeta meta = meta();
+        if (meta == null || lore == null) {
+            return this;
+        }
+
+        List<Component> currentLore = componentLore();
+        currentLore.addAll(0, lore.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+        meta.lore(currentLore);
 
         return meta(meta);
     }

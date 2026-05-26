@@ -10,6 +10,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.loper.suncore.api.CoreService;
 import ru.loper.suncore.api.command.CommandServices;
+import ru.loper.suncore.api.component.AdventureComponent;
 import ru.loper.suncore.api.database.DatabaseServices;
 import ru.loper.suncore.api.economy.EconomyEditor;
 import ru.loper.suncore.api.economy.EconomyServices;
@@ -45,6 +46,7 @@ public final class SunCore extends JavaPlugin {
         printWelcome();
 
         CoreService.setCoreInstance(this);
+        AdventureComponent.init(this);
         CoreScheduler coreScheduler = VersionHelper.isFolia() ?
                 new FoliaScheduler() :
                 new BukkitScheduler();
