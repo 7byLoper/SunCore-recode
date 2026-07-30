@@ -6,7 +6,7 @@ version: '${version}'
 author: Loper
 
 api-version: '1.16'
-description: "Utility for sundev plugins"
+description: 'Utility for sundev plugins'
 website: t.me/bySunDev
 
 softdepend:

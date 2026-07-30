@@ -17,7 +17,7 @@ replace_all_databases: false
 
 #Миры в которых отключена физика
 no_physics_worlds:
-  - "spawn"
+  - 'spawn'
 #redis:
 #  host: '127.0.0.1'
 #  port: 6379

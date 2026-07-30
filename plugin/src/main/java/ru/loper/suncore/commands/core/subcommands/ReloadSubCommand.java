@@ -21,7 +21,7 @@ public class ReloadSubCommand implements BuildableCommand {
         configManager.reloadAll();
         long stop = System.currentTimeMillis();
 
-        commandSender.sendMessage(configManager.getMessageConfig().getReloadSuccess()
+        commandSender.sendMessage(configManager.getMessagesSettings().getReloadSuccess()
                 .replace("{ms}", String.valueOf(stop - start)));
     }
 

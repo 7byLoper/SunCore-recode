@@ -1,4 +1,4 @@
-package ru.loper.suncore.listeners;
+package ru.loper.suncore.listener;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.EventHandler;

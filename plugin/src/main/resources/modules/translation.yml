@@ -1,21 +1,47 @@
-no_permission: "&cУ вас нет прав"
+no_permission: '&#FF0000▶ &fУ вас нет прав'
 
 help: |
-  
+  &#05A3FE▶ &fПомощь по &eSunCore:
+  &7/score give &8- &#F3F3F3выдать предмет из custom-items
+  &7/score save &8- &#F3F3F3сохранить предмет в custom-items
+  &7/score reload &8- &#F3F3F3перезагрузить конфиги
+  &7/score inv-save &8- &#F3F3F3сохранение инвентарей
 
 reload:
-  success: "&#05A3FE▶ &fКонфигурация успешно перезагрузилась за {ms} мс"
+  success: '&#05A3FE▶ &fКонфигурация успешно перезагрузилась за {ms} мс'
 
 save:
-  usage: "&#FF0000▶ &fИспользование: /suncore save [название]"
-  air: "&#FF0000▶ &fВы не можете сохранить воздух"
-  success: "&#05A3FE▶ &fПредмет &e{name} &fуспешно сохранён"
+  usage: '&#FF0000▶ &fИспользование: /suncore save [название]'
+  air: '&#FF0000▶ &fВы не можете сохранить воздух'
+  success: '&#05A3FE▶ &fПредмет &e{name} &fуспешно сохранён'
 
 give:
-  usage: "&#FF0000▶ &fИспользование: /suncore give [custom item] [player] [amount]"
-  item_not_found: "&#FF0000▶ &fДанного предмета не существует"
-  invalid_amount: "&#FF0000▶ &fНекорректное количество предметов"
-  player_only: "&cДанная команда доступна только игрокам"
-  player_not_found: "&#FF0000▶ &fУказанный игрок не найден или не в сети"
-  success: "&#05A3FE▶ &fВыдан предмет &e%s &fигроку &e%s &fв количестве &e%d"
+  usage: '&#FF0000▶ &fИспользование: /suncore give [custom item] [player] [amount]'
+  item_not_found: '&#FF0000▶ &fДанного предмета не существует'
+  invalid_amount: '&#FF0000▶ &fНекорректное количество предметов'
+  player_only: '&cДанная команда доступна только игрокам'
+  player_not_found: '&#FF0000▶ &fУказанный игрок не найден или не в сети'
+  success: '&#05A3FE▶ &fВыдан предмет &e%s &fигроку &e%s &fв количестве &e%d'
 
+inv_save:
+  usage: '&#FF0000▶ &fИспользование: &7/suncore inv-save <create|edit|give> <название> [игрок]'
+  only_player: '&#FF0000▶ &fСоздавать и редактировать инвентари может только игрок'
+  unknown_action: '&#FF0000▶ &fНеизвестное действие. Используйте &7create&f, &7edit&f или &7give'
+  invalid_name: '&#FF0000▶ &fНазвание должно содержать от 1 до 32 символов: &7a-z, 0-9, _, -'
+  already_exists: '&#FF0000▶ &fИнвентарь &e{name} &fуже существует'
+  not_found: '&#FF0000▶ &fИнвентарь &e{name} &fне найден'
+  create_opened: '&#05A3FE▶ &fИнвентарь &e{name} &fсоздан, редактор открыт'
+  edit_opened: '&#05A3FE▶ &fРедактор инвентаря &e{name} &fоткрыт'
+  saved: '&#05A3FE▶ &fИнвентарь &e{name} &fуспешно сохранён'
+  target_required: '&#FF0000▶ &fПри выполнении из консоли необходимо указать игрока'
+  player_not_found: '&#FF0000▶ &fИгрок &e{player} &fне найден или не в сети'
+  give_success: '&#05A3FE▶ &fИнвентарь &e{name} &fвыдан игроку &e{player}'
+  delete_success: '&#05A3FE▶ &fИнвентарь &e{name} &fудален'
+  dropped: '&#FFB800▶ &fУ игрока &e{player} &fне хватило места, выброшено предметов: &e{amount}'
+  operation_error: '&#FF0000▶ &fНе удалось обработать инвентарь &e{name}&f. Проверьте консоль'
+  menu_title: '&8Редактирование инвентаря: {name}'
+
+security:
+  usage: '&#FF0000▶ &fИспользование: &7/suncore security allow <plugin> <action>'
+  add: '&#05A3FE▶ &fПравило &7{action} &fдобавлено для плагина &7{plugin}'
+  already_added: '&#FFB800▶ &fПравило уже активно'

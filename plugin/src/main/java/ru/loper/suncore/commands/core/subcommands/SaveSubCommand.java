@@ -23,18 +23,18 @@ public class SaveSubCommand implements BuildableCommand {
     public void handle(@NotNull CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) return;
         if (args.length != 2) {
-            sender.sendMessage(configManager.getMessageConfig().getSaveUsage());
+            sender.sendMessage(configManager.getMessagesSettings().getSaveUsage());
             return;
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType().equals(Material.AIR)) {
-            sender.sendMessage(configManager.getMessageConfig().getSaveAir());
+            sender.sendMessage(configManager.getMessagesSettings().getSaveAir());
             return;
         }
 
         configManager.addItem(args[1], item);
-        sender.sendMessage(configManager.getMessageConfig().getSaveSuccess()
+        sender.sendMessage(configManager.getMessagesSettings().getSaveSuccess()
                 .replace("{name}", args[1]));
     }
 

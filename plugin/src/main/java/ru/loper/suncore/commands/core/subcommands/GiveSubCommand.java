@@ -23,13 +23,13 @@ public class GiveSubCommand implements BuildableCommand {
     @Override
     public void handle(@NotNull CommandSender sender, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(configManager.getMessageConfig().getGiveUsage());
+            sender.sendMessage(configManager.getMessagesSettings().getGiveUsage());
             return;
         }
 
         ItemBuilder itemBuilder = configManager.getCustomItem(args[1]);
         if (itemBuilder == null) {
-            sender.sendMessage(configManager.getMessageConfig().getGiveItemNotFound());
+            sender.sendMessage(configManager.getMessagesSettings().getGiveItemNotFound());
             return;
         }
 
@@ -38,14 +38,14 @@ public class GiveSubCommand implements BuildableCommand {
 
         int amount = resolveAmount(args);
         if (amount <= 0) {
-            sender.sendMessage(configManager.getMessageConfig().getGiveInvalidAmount());
+            sender.sendMessage(configManager.getMessagesSettings().getGiveInvalidAmount());
             return;
         }
 
         player.getInventory().addItem(itemBuilder.amount(amount).build())
                 .values().forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
         sender.sendMessage(String.format(
-                configManager.getMessageConfig().getGiveSuccess(),
+                configManager.getMessagesSettings().getGiveSuccess(),
                 args[1], player.getName(), amount
         ));
     }
@@ -53,7 +53,7 @@ public class GiveSubCommand implements BuildableCommand {
     private Player resolveTargetPlayer(CommandSender sender, String[] args) {
         if (args.length < 3) {
             if (!(sender instanceof Player player)) {
-                sender.sendMessage(configManager.getMessageConfig().getGivePlayerOnly());
+                sender.sendMessage(configManager.getMessagesSettings().getGivePlayerOnly());
                 return null;
             }
 
@@ -62,7 +62,7 @@ public class GiveSubCommand implements BuildableCommand {
 
         Player player = Bukkit.getPlayer(args[2]);
         if (player == null) {
-            sender.sendMessage(configManager.getMessageConfig().getGivePlayerNotFound());
+            sender.sendMessage(configManager.getMessagesSettings().getGivePlayerNotFound());
             return null;
         }
 

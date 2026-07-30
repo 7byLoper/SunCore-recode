@@ -1,0 +1,33 @@
+enable: false
+block_message: |
+  &#E54C2E[ꜱᴇᴄᴜʀɪᴛʏ]&f Заблокировано подозрительное действие:
+  &#E54C2E -&f Плагин: &7{plugin-name}
+  &#E54C2E -&f Действие: &7{action}
+  &#E54C2E -&f Контекст: &7{context}
+  
+  &#E52E3D[?]&f Для разрешения введите: &f/score security allow {plugin-name} {action}
+stop_if_diable: false
+allow_command: true
+
+ignore_network_ports:
+  - 3306
+
+checks:
+  file_write: false
+  network_out: true
+
+telegram:
+  enable: false
+  token: ''
+  chat_id: ''
+  messages:
+    add_rule: '[ꜱᴇᴄᴜʀɪᴛʏ] Для плагина {plugin} разрешено право {action}'
+    blocked: |
+      [ꜱᴇᴄᴜʀɪᴛʏ] Заблокировано подозрительное действие:
+       - Плагин: {plugin-name}
+       - Действие: {action}
+       - Контекст: {context}
+
+permissions:
+  Multiverse-Core:
+    - FILE_WRITE

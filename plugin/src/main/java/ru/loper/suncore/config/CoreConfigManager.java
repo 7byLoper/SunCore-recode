@@ -9,6 +9,10 @@ import ru.loper.suncore.api.config.ConfigManager;
 import ru.loper.suncore.api.config.CustomConfig;
 import ru.loper.suncore.api.database.DatabaseManager;
 import ru.loper.suncore.api.itemstack.ItemBuilder;
+import ru.loper.suncore.config.settings.MessagesSettings;
+import ru.loper.suncore.config.settings.SecuritySettings;
+import ru.loper.suncore.config.settings.ServerMessage;
+import ru.loper.suncore.manager.SavedInventoryManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +25,9 @@ public class CoreConfigManager extends ConfigManager {
     private boolean replaceAllDatabases;
 
     private Map<String, ItemBuilder> customItems;
-    private MessageConfig messageConfig;
+    private MessagesSettings messagesSettings;
+    private SavedInventoryManager savedInventoryManager;
+    private SecuritySettings securitySettings;
 
     private ServerMessage advancementMessage;
     private ServerMessage joinMessage;
@@ -41,17 +47,27 @@ public class CoreConfigManager extends ConfigManager {
         addCustomConfig(new CustomConfig("modules/custom-items.yml", plugin));
         addCustomConfig(new CustomConfig("modules/translation.yml", plugin));
         addCustomConfig(new CustomConfig("modules/server-messages.yml", plugin));
+        addCustomConfig(new CustomConfig("modules/security.yml", plugin));
     }
 
     @Override
     public void loadValues() {
-        defaultDatabase = DatabaseManager.fromSection(plugin.getConfig().getConfigurationSection("database"), plugin, false);
+        defaultDatabase = DatabaseManager.fromSection(
+                plugin.getConfig().getConfigurationSection("database"),
+                plugin,
+                false
+        );
         replaceAllDatabases = plugin.getConfig().getBoolean("replace_all_databases");
 
         customItems = new HashMap<>();
         loadCustomItems();
 
-        messageConfig = new MessageConfig(getTranslationConfig());
+        messagesSettings = new MessagesSettings(getTranslationConfig());
+        securitySettings = SecuritySettings.loadFromConfig(getCustomConfig("modules/security.yml"));
+
+        if (savedInventoryManager == null) {
+            savedInventoryManager = new SavedInventoryManager(plugin);
+        }
 
         ConfigurationSection serverMessagesConfig = getCustomConfig("modules/server-messages.yml").getConfig();
 
@@ -66,8 +82,10 @@ public class CoreConfigManager extends ConfigManager {
 
     private void loadCustomItems() {
         ConfigurationSection itemsSection = getCustomItemsConfig().getConfig();
+
         for (String key : itemsSection.getKeys(false)) {
             ConfigurationSection itemSection = itemsSection.getConfigurationSection(key);
+
             if (itemSection == null) {
                 continue;
             }

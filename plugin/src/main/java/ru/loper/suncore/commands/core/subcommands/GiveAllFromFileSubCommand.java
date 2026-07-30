@@ -27,7 +27,7 @@ public class GiveAllFromFileSubCommand implements BuildableCommand {
     @Override
     public void handle(@NotNull CommandSender commandSender, @NotNull String[] args) {
         if (args.length < 2) {
-            commandSender.sendMessage(configManager.getMessageConfig().getGiveUsage());
+            commandSender.sendMessage(configManager.getMessagesSettings().getGiveUsage());
             return;
         }
 
@@ -49,7 +49,7 @@ public class GiveAllFromFileSubCommand implements BuildableCommand {
     private Player resolveTargetPlayer(CommandSender sender, String[] args) {
         if (args.length < 3) {
             if (!(sender instanceof Player player)) {
-                sender.sendMessage(configManager.getMessageConfig().getGivePlayerOnly());
+                sender.sendMessage(configManager.getMessagesSettings().getGivePlayerOnly());
                 return null;
             }
 
@@ -58,7 +58,7 @@ public class GiveAllFromFileSubCommand implements BuildableCommand {
 
         Player player = Bukkit.getPlayer(args[2]);
         if (player == null) {
-            sender.sendMessage(configManager.getMessageConfig().getGivePlayerNotFound());
+            sender.sendMessage(configManager.getMessagesSettings().getGivePlayerNotFound());
             return null;
         }
 

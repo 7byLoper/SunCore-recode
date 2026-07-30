@@ -28,22 +28,22 @@ import ru.loper.suncore.economy.PlayerPointsEconomy;
 import ru.loper.suncore.economy.VaultEconomy;
 import ru.loper.suncore.hologram.DecentHologramsHook;
 import ru.loper.suncore.hologram.FancyHologramsHook;
-import ru.loper.suncore.listeners.ItemsListener;
-import ru.loper.suncore.listeners.MenuListener;
-import ru.loper.suncore.listeners.PhysicsListener;
-import ru.loper.suncore.listeners.ServerMessagesListener;
+import ru.loper.suncore.listener.*;
 import ru.loper.suncore.registrar.BukkitCommandRegistrar;
 import ru.loper.suncore.runnable.MenuRefreshRunnable;
 import ru.loper.suncore.scheduler.bukkit.BukkitScheduler;
 import ru.loper.suncore.scheduler.folia.FoliaScheduler;
+import ru.loper.suncore.security.CoreSecurityManager;
+import ru.loper.suncore.security.TelegramNotifier;
 
 @Getter
 public final class SunCore extends JavaPlugin {
     private CoreConfigManager configManager;
+    private TelegramNotifier telegramNotifier;
+    private boolean securitySetup;
 
     @Override
     public void onEnable() {
-        printWelcome();
 
         CoreService.setCoreInstance(this);
         AdventureComponent.init(this);
@@ -81,20 +81,26 @@ public final class SunCore extends JavaPlugin {
             HologramsServices.setFancyHolograms(fancyHolograms);
         }
 
+        telegramNotifier = new TelegramNotifier(configManager.getSecuritySettings());
+        setupSecurity(telegramNotifier);
+
         registerListeners(
                 new ItemsListener(),
                 new MenuListener(),
                 new ServerMessagesListener(configManager),
-                new PhysicsListener(configManager)
+                new PhysicsListener(configManager),
+                new SecurityDisableListener(this, configManager)
         );
 
-        new CoreCommand(this)
+        new CoreCommand(this, telegramNotifier)
                 .registerWrappers();
 
         new MenuRefreshRunnable()
                 .runTaskTimer(this, 20L, 20L);
 
         SchedulerServices.clientScheduler().runTaskLater(this, () -> AntiRelogHook.hook(this), 20L);
+
+        printWelcome();
     }
 
     @Override
@@ -105,17 +111,39 @@ public final class SunCore extends JavaPlugin {
         RedisManager.shutdownAll();
     }
 
+    @SuppressWarnings("deprecation")
     private void printWelcome() {
-        Bukkit.getConsoleSender().sendMessage("§e ____               ____");
-        Bukkit.getConsoleSender().sendMessage("§e/ ___| _   _ _ __  / ___|___  _ __ ___");
-        Bukkit.getConsoleSender().sendMessage("§e\\___ \\| | | | '_ \\| |   / _ \\| '__/ _ \\");
-        Bukkit.getConsoleSender().sendMessage("§e ___) | |_| | | | | |__| (_) | | |  __/");
-        Bukkit.getConsoleSender().sendMessage("§e|____/ \\__,_|_| |_|\\____\\___/|_|  \\___|");
-        Bukkit.getConsoleSender().sendMessage("§fПлагин сделан при поддержке §eSunDev");
-        Bukkit.getConsoleSender().sendMessage("§fНовостной канал студии: §ahttps://t.me/bySunDev");
-        Bukkit.getConsoleSender().sendMessage("§fВерсия плагина: §a" + getDescription().getVersion());
+        Bukkit.getConsoleSender().sendMessage("§e  ____               ____");
+        Bukkit.getConsoleSender().sendMessage("§e / ___| _   _ _ __  / ___|___  _ __ ___");
+        Bukkit.getConsoleSender().sendMessage("§e \\___ \\| | | | '_ \\| |   / _ \\| '__/ _ \\");
+        Bukkit.getConsoleSender().sendMessage("§e  ___) | |_| | | | | |__| (_) | | |  __/");
+        Bukkit.getConsoleSender().sendMessage("§e |____/ \\__,_|_| |_|\\____\\___/|_|  \\___|");
+        Bukkit.getConsoleSender().sendMessage("§f Плагин сделан при поддержке §eSunDev");
+        Bukkit.getConsoleSender().sendMessage("§f Новостной канал студии: §ahttps://t.me/bySunDev");
+        Bukkit.getConsoleSender().sendMessage("§f Версия плагина: §a%s".formatted(getDescription().getVersion()));
+        Bukkit.getConsoleSender().sendMessage("§f Защита:" + (configManager.getSecuritySettings().isEnable() && securitySetup ? "§a Включена" : "§c Отключена"));
     }
 
+    @SuppressWarnings("removal")
+    private void setupSecurity(TelegramNotifier notifier) {
+        if (!configManager.getSecuritySettings().isEnable()) {
+            securitySetup = false;
+            return;
+        }
+        try {
+            CoreSecurityManager securityManager = new CoreSecurityManager(this, configManager, System.getSecurityManager(), notifier);
+            System.setSecurityManager(securityManager);
+            securitySetup = true;
+        } catch (Exception e) {
+            if (e.getMessage().toLowerCase().contains("security manager is deprecated")) {
+                getLogger().severe("Ошибка инициализации Security Manager, для данной функции необходимо добавить флаг '-Djava.security.manager=allow' в команду запуска сервера");
+            }
+
+            securitySetup = false;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
     private ItemStack createSkullHead() {
         if (VersionHelper.IS_ITEM_LEGACY) {
             return new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
@@ -130,5 +158,4 @@ public final class SunCore extends JavaPlugin {
             manager.registerEvents(listener, this);
         }
     }
-
 }

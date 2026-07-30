@@ -1,4 +1,4 @@
-package ru.loper.suncore.listeners;
+package ru.loper.suncore.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

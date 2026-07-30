@@ -22,6 +22,7 @@ import ru.loper.suncore.api.colorize.StringColorize;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("ALL")
 public class ItemBuilder {
@@ -90,6 +91,8 @@ public class ItemBuilder {
         if (section.getBoolean("hide_effects")) {
             builder.hideEffects();
         }
+
+        builder.flags(itemFlags(section));
 
         if (section.contains("color")) {
             String colorStr = section.getString("color");
@@ -163,7 +166,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Парсит одну строку атрибута в формате "slot:attribute:value".
+     * Парсит одну строку атрибута в формате "slot:attribute:operation:value".
      *
      * @param str Строка атрибута для парсинга
      * @return Спарсенный AttributeData или null, если формат неверный
@@ -171,14 +174,17 @@ public class ItemBuilder {
     public static AttributeData parseAttributeString(String str) {
         try {
             String[] parts = str.split(":");
-            if (parts.length != 3) return null;
+            if (parts.length != 3 && parts.length != 4) return null;
 
             EquipmentSlot slot = parseSlot(parts[0]);
             Attribute attribute = parseAttribute(parts[1]);
-            double value = Double.parseDouble(parts[2]);
+            AttributeModifier.Operation operation = parts.length == 4
+                    ? parseOperation(parts[2])
+                    : AttributeModifier.Operation.ADD_NUMBER;
+            double value = Double.parseDouble(parts[parts.length - 1]);
 
-            if (slot != null && attribute != null) {
-                return new AttributeData(slot, attribute, value);
+            if (slot != null && attribute != null && operation != null) {
+                return new AttributeData(slot, attribute, operation, value);
             }
         } catch (Exception e) {
             Bukkit.getLogger().warning("Неверный формат атрибута: " + str);
@@ -213,6 +219,20 @@ public class ItemBuilder {
     private static Attribute parseAttribute(String attrStr) {
         try {
             return Attribute.valueOf(attrStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static String[] itemFlags(ConfigurationSection section) {
+        return Stream.of(section.getStringList("item_flags"), section.getStringList("flags"))
+                .flatMap(Collection::stream)
+                .toArray(String[]::new);
+    }
+
+    private static AttributeModifier.Operation parseOperation(String operationStr) {
+        try {
+            return AttributeModifier.Operation.valueOf(operationStr.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -362,7 +382,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Применяет несколько атрибутов из списка строк в формате "slot:attribute:value".
+     * Применяет несколько атрибутов из списка строк в формате "slot:attribute:operation:value".
      *
      * @param attributes Список строк с атрибутами
      * @return Этот экземпляр ItemBuilder
@@ -389,7 +409,7 @@ public class ItemBuilder {
                     UUID.randomUUID(),
                     "custom_attribute_" + data.attribute.name(),
                     data.value,
-                    AttributeModifier.Operation.ADD_NUMBER,
+                    data.operation,
                     data.slot
             );
             meta.addAttributeModifier(data.attribute, modifier);
@@ -451,17 +471,23 @@ public class ItemBuilder {
      * @return Этот экземпляр ItemBuilder
      */
     public ItemBuilder flags(String... itemFlags) {
-        if (itemFlags == null) return this;
         ItemMeta meta = meta();
-        if (meta == null) return this;
-        for (String flagName : itemFlags) {
-            try {
-                meta.addItemFlags(ItemFlag.valueOf(flagName.toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                Bukkit.getLogger().warning("Неизвестный флаг предмета: " + flagName);
-            }
-        }
+        if (meta == null || itemFlags == null) return this;
+        Arrays.stream(itemFlags)
+                .filter(Objects::nonNull)
+                .map(ItemBuilder::parseItemFlag)
+                .filter(Objects::nonNull)
+                .forEach(meta::addItemFlags);
         return meta(meta);
+    }
+
+    private static ItemFlag parseItemFlag(String flagName) {
+        try {
+            return ItemFlag.valueOf(flagName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Bukkit.getLogger().warning("Неивестный флаг предмета: " + flagName);
+            return null;
+        }
     }
 
     /**
@@ -944,7 +970,7 @@ public class ItemBuilder {
 
             Set<ItemFlag> flags = meta.getItemFlags();
             if (!flags.isEmpty()) {
-                section.set("flags", flags.stream()
+                section.set("item_flags", flags.stream()
                         .map(ItemFlag::name)
                         .collect(Collectors.toList()));
             }
@@ -959,6 +985,18 @@ public class ItemBuilder {
                 section.set("enchantments", enchantList);
             }
 
+            if (meta.hasAttributeModifiers()) {
+                section.set("attributes", meta.getAttributeModifiers().entries().stream()
+                        .filter(entry -> entry.getValue().getSlot() != null)
+                        .map(entry -> "%s:%s:%s:%s".formatted(
+                                entry.getValue().getSlot().name(),
+                                entry.getKey().name(),
+                                entry.getValue().getOperation().name(),
+                                entry.getValue().getAmount()
+                        ))
+                        .collect(Collectors.toList()));
+            }
+
             if (meta instanceof LeatherArmorMeta leatherMeta) {
                 Color color = leatherMeta.getColor();
                 section.set("color", String.format("%d,%d,%d", color.getRed(), color.getGreen(), color.getBlue()));
@@ -970,14 +1008,6 @@ public class ItemBuilder {
             section.set("glow", meta.hasEnchant(Enchantment.DURABILITY) &&
                     meta.getEnchantLevel(Enchantment.DURABILITY) == 1 &&
                     meta.hasItemFlag(ItemFlag.HIDE_ENCHANTS));
-
-            if (meta.hasItemFlag(ItemFlag.HIDE_ATTRIBUTES)) {
-                section.set("hide_attributes", true);
-            }
-
-            if (meta.hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
-                section.set("hide_enchantments", true);
-            }
 
             if (meta.isUnbreakable()) {
                 section.set("unbreakable", true);
@@ -999,6 +1029,9 @@ public class ItemBuilder {
     /**
      * Запись для хранения данных атрибута.
      */
-    public static record AttributeData(EquipmentSlot slot, Attribute attribute, double value) {
+    public static record AttributeData(EquipmentSlot slot, Attribute attribute, AttributeModifier.Operation operation, double value) {
+        public AttributeData(EquipmentSlot slot, Attribute attribute, double value) {
+            this(slot, attribute, AttributeModifier.Operation.ADD_NUMBER, value);
+        }
     }
 }
