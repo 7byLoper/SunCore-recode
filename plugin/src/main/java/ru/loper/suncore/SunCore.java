@@ -12,6 +12,7 @@ import ru.loper.suncore.api.CoreService;
 import ru.loper.suncore.api.command.CommandServices;
 import ru.loper.suncore.api.component.AdventureComponent;
 import ru.loper.suncore.api.database.DatabaseServices;
+import ru.loper.suncore.api.database.PluginDatabaseExecutor;
 import ru.loper.suncore.api.economy.EconomyEditor;
 import ru.loper.suncore.api.economy.EconomyServices;
 import ru.loper.suncore.api.hook.antirelog.AntiRelogHook;
@@ -105,6 +106,8 @@ public final class SunCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        PluginDatabaseExecutor.shutdownAll();
+
         SchedulerServices.clientScheduler()
                 .shutdown();
 

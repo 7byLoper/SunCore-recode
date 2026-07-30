@@ -1,11 +1,10 @@
 package ru.loper.suncore.api.database;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +23,7 @@ public final class PluginDatabaseExecutor {
     private static final int WORKER_THREADS = 4;
     private static final int QUEUE_CAPACITY = 1024;
     private static final long SHUTDOWN_TIMEOUT_SECONDS = 10L;
+    private static final long SHUTDOWN_ALL_TIMEOUT_SECONDS = 30L;
 
     private static final Map<Plugin, ExecutorService> EXECUTORS = new ConcurrentHashMap<>();
 
@@ -35,8 +35,43 @@ public final class PluginDatabaseExecutor {
         return EXECUTORS.computeIfAbsent(plugin, PluginDatabaseExecutor::create);
     }
 
+    public static void shutdown(Class<?> pluginClass) {
+        shutdown(JavaPlugin.getProvidingPlugin(pluginClass));
+    }
+
+    public static void shutdownAll() {
+        Collection<ExecutorService> executors = new ArrayList<>(EXECUTORS.values());
+        EXECUTORS.clear();
+
+        executors.forEach(ExecutorService::shutdown);
+
+        boolean interrupted = false;
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(SHUTDOWN_ALL_TIMEOUT_SECONDS);
+
+        for (ExecutorService executor : executors) {
+            long remaining = deadline - System.nanoTime();
+            if (remaining <= 0L) {
+                executor.shutdownNow();
+                continue;
+            }
+
+            try {
+                if (!executor.awaitTermination(remaining, TimeUnit.NANOSECONDS)) {
+                    executor.shutdownNow();
+                }
+            } catch (InterruptedException exception) {
+                interrupted = true;
+                executor.shutdownNow();
+            }
+        }
+
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     private static ExecutorService create(Plugin plugin) {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+        return new ThreadPoolExecutor(
                 WORKER_THREADS,
                 WORKER_THREADS,
                 0L,
@@ -45,9 +80,6 @@ public final class PluginDatabaseExecutor {
                 new DatabaseThreadFactory(plugin.getName()),
                 new BackpressurePolicy()
         );
-
-        plugin.getServer().getPluginManager().registerEvents(new ShutdownListener(plugin), plugin);
-        return executor;
     }
 
     private static void shutdown(Plugin plugin) {
@@ -64,21 +96,6 @@ public final class PluginDatabaseExecutor {
         } catch (InterruptedException exception) {
             executor.shutdownNow();
             Thread.currentThread().interrupt();
-        }
-    }
-
-    private static final class ShutdownListener implements Listener {
-        private final Plugin owner;
-
-        private ShutdownListener(Plugin owner) {
-            this.owner = owner;
-        }
-
-        @EventHandler
-        public void onPluginDisable(PluginDisableEvent event) {
-            if (event.getPlugin() == owner) {
-                shutdown(owner);
-            }
         }
     }
 
